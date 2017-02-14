@@ -1,0 +1,21 @@
+/*
+ * Dummy CUP file to get sym class defined
+ */
+terminal PLUS, TIMES, LPAREN, RPAREN, LBRACK, RBRACK;
+terminal COMMA, MINUS, DIV, COLON, SEMICOLON;
+terminal LEQ, GEQ, EQ, NEQ, GREATER, LESSER, NOT, AND, OR, TRUE, FALSE;
+terminal DO,OD;
+terminal IF, FI, THEN;
+terminal LARROW, RARROW, BOX;
+terminal Integer NUMBER;
+terminal String ID;
+terminal DISPLAY;
+terminal INT, BOOL;
+terminal FUN, NUF, DOUBLARROW, DOUBRARROW;
+
+
+non terminal prog;
+
+start with prog;
+
+prog ::= ID;

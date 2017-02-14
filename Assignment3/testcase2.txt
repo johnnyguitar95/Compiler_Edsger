@@ -1,0 +1,8 @@
+[ x:int, y:int ]
+
+x, y <- 4, 6
+display x, y
+do x>y -> x <- x-y
+[] y>x -> y <- y-x
+od 
+display x
