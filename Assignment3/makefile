@@ -16,12 +16,12 @@ CP=.:$(CUPJAR)
 Main.class: Main.java sym.java Yylex.java jgo
 	$(JAVAC) -classpath $(CP) *.java
 
-sym.java: one.cup
-	$(CUP) one.cup
+sym.java: Edsger.cup
+	$(CUP) Edsger.cup
 	rm parser.java
 
-Yylex.java: one.flex
-	$(JFLEX) one.flex
+Yylex.java: Edsger.flex
+	$(JFLEX) Edsger.flex
 
 #
 # Create a one-line shell script to run the
