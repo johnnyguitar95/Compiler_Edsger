@@ -1,8 +1,10 @@
-[ n:int, i:int ] 
+{ recursive Fibonacci sequence }
 
-fun f:int << fib << n:int] 
+[ n:int, i:int ]
 
-	[ t:int ]
+fun f:int << fib << n:int] {function declaration}
+
+	[ t:int ] {local variable}
 	
 	if n < 1 -> f <- 0
 	[] (n > 0) and (n <= 2) -> f <- 1

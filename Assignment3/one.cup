@@ -5,7 +5,7 @@ terminal PLUS, TIMES, LPAREN, RPAREN, LBRACK, RBRACK;
 terminal COMMA, MINUS, DIV, COLON, SEMICOLON;
 terminal LEQ, GEQ, EQ, NEQ, GREATER, LESSER, NOT, AND, OR, TRUE, FALSE;
 terminal DO,OD;
-terminal IF, FI, THEN;
+terminal IF, FI, THEN, SKIP;
 terminal LARROW, RARROW, BOX;
 terminal Integer NUMBER;
 terminal String ID;

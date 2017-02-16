@@ -7,11 +7,18 @@
 
 import java_cup.runtime.Symbol;
 %%
+%state COMMENT
+%{
+	int commentCount;
+%}
+
 %cup
 
 digit=[0-9]
 letter=[A-Za-z]
 %%
+
+<YYINITIAL>{
 "(" { return new Symbol(sym.LPAREN); }
 ")" { return new Symbol(sym.RPAREN); }
 "," { return new Symbol(sym.COMMA); }
@@ -40,6 +47,7 @@ letter=[A-Za-z]
 "nuf" {return new Symbol(sym.NUF);}
 "<<" {return new Symbol(sym.DOUBLARROW);}
 ">>" {return new Symbol(sym.DOUBRARROW);}
+"skip" {return new Symbol(sym.SKIP);}
 "<-" {return new Symbol(sym.LARROW);}
 "->" {return new Symbol(sym.RARROW);}
 "[]" {return new Symbol(sym.BOX);}
@@ -52,4 +60,31 @@ letter=[A-Za-z]
 {digit}+ { return new Symbol(sym.NUMBER, new Integer(yytext())); }
 {letter}({letter}|{digit})* { return new Symbol(sym.ID, yytext()); }
 [ \t\n] { /* ignore white space. */ }
+"{" {commentCount = 1; yybegin(COMMENT);}
+}
+
+
+
+<COMMENT>{
+
+"{" {commentCount++;}
+
+"}" {commentCount--; 
+	if(commentCount == 0)
+		yybegin(YYINITIAL);
+}
+
+
+. { /* ignore any string */ }
+
+[ \t\n] { /* ignore white space. */}
+
+<<EOF>> { System.err.println("Did not close comment properly. "); }
+
+}
+
+
+
+
+
 . { System.err.println("Illegal character: "+yytext()); }

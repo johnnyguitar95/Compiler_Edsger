@@ -1,7 +1,12 @@
-[ x:int, y:int ]
+{ compute the greatest common divisor of two numbers 
+  - written by mike slattery, feb 2000 }
 
-x, y <- 4, 6
-display x, y
+{ Note comments are encolosed in braces { and can be nested} }
+
+[ x:int, y:int ]	{ global variables }
+
+x, y <- 4, 6 { multiple assignment }
+display x, y 	{ print out values }
 do x>y -> x <- x-y
 [] y>x -> y <- y-x
 od 
