@@ -1,0 +1,23 @@
+$--------------------------$
+$ Sample program           $
+$ Check a few pairs for    $
+$ even divisibility        $
+$--------------------------$
+dividend <- 20.
+divisor <- 6.
+quotient <- dividend/divisor.
+do
+  output dividend, divisor, 1111.
+unless quotient * divisor <= dividend.
+dividend <- 20.
+divisor <- 4.
+quotient <- dividend/divisor.
+do
+  output dividend, divisor, 2222.
+unless quotient * divisor <= dividend.
+dividend <- 21.
+divisor <- 4.
+quotient <- dividend/divisor.
+do
+  output dividend, divisor, 3333.
+unless quotient * divisor <= dividend.

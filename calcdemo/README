@@ -1,0 +1,5 @@
+This directory contains a simple example of using CUP to
+produce a grammar-driven expression evaluator.
+
+Based on the example in the CUP user's manual.
+

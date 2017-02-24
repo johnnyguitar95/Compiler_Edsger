@@ -1,0 +1,7 @@
+a := 5 + 3.
+output a, a-1.
+b := 20.
+do
+  b := 30.
+unless a<= 10.
+

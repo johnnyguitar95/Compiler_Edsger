@@ -1,0 +1,63 @@
+package ParsePkg;
+
+import java_cup.runtime.*;
+import AbstractSyntaxPkg.*;
+import VisitorPkg.*;
+
+parser code {:
+
+  /* This code will compute the parse tree and return it.
+   */
+  public Program getTree() throws java.lang.Exception {
+    Symbol s = parse();
+    return (Program)(s.value);
+  }
+
+:};
+terminal DOT, PLUS, TIMES, LPAREN, RPAREN, UMINUS;
+terminal OUTPUT, COMMA, ASSIGN, MINUS, DIV;
+terminal LEQ;
+terminal DO, UNLESS;
+terminal Integer NUMBER;
+terminal String ID;
+
+non terminal Program prog;
+non terminal Stmt stmt;
+non terminal StmtList stmt_list;
+non terminal Expr expr;
+non terminal ExprList expr_list;
+
+precedence nonassoc LEQ;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIV;
+precedence nonassoc UMINUS;
+
+start with prog;
+
+prog ::= stmt_list:s		{: RESULT = new Program(s); :}
+      ;
+
+stmt_list ::= stmt_list:sl stmt:s	{: sl.add(s); RESULT=sl; :}
+          |  stmt:s			{: RESULT = new StmtList(s); :}
+          ;
+
+stmt ::= ID:i ASSIGN expr:e DOT	{: RESULT=new Assign(i,e); :}
+      |  OUTPUT expr_list:el DOT	{: RESULT=new Output(el); :}
+      |  DO stmt_list:sl UNLESS expr:e DOT	{: RESULT=new Unless(sl,e); :}
+      ;
+
+expr_list ::= expr_list:el COMMA expr:e	{: el.add(e); RESULT=el; :}
+           |  expr:e			{: RESULT=new ExprList(e); :}
+           ;
+
+expr ::= NUMBER:v		{: RESULT=new AbstractSyntaxPkg.Number(v); :}
+      |  ID:n			{: RESULT=new Id(n); :}
+      |  expr:e1 PLUS expr:e2	{: RESULT=new Plus(e1,e2); :}
+      |  expr:e1 MINUS expr:e2	{: RESULT=new Minus(e1,e2); :}
+      |  MINUS expr:e	{: RESULT=new Minus(new AbstractSyntaxPkg.Number(0),
+					e); :} %prec UMINUS
+      |  expr:e1 TIMES expr:e2	{: RESULT=new Times(e1,e2); :}
+      |  expr:e1 DIV expr:e2	{: RESULT=new Divide(e1,e2); :}
+      |  expr:e1 LEQ expr:e2	{: RESULT=new Leq(e1,e2); :}
+      |  LPAREN expr:e RPAREN	{: RESULT=e; :}
+      ;
