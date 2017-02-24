@@ -1,8 +1,6 @@
 /*
- * Simple demo scanner for
- * demo language
- *
- * written by mike slattery - jan 2005
+ * Flex file
+ * Written by John Halloran
  */
 
 import java_cup.runtime.Symbol;

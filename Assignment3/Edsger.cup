@@ -1,5 +1,6 @@
 /*
- * Dummy CUP file to get sym class defined
+ * Cup file
+ * Written by John Halloran
  */
 terminal PLUS, TIMES, LPAREN, RPAREN, LBRACK, RBRACK;
 terminal COMMA, MINUS, DIV, COLON, SEMICOLON;
