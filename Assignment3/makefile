@@ -7,8 +7,8 @@
 
 JAVA=java
 JAVAC=javac
-JFLEX=/users/faculty/mikes/cosc4400/jflex-1.6.1/bin/jflex
-CUPJAR=/users/faculty/mikes/cosc4400/jflex-1.6.1/lib/java-cup-11a.jar
+JFLEX=/users/majors/jhallora/cosc4400/jflex-1.6.1/bin/jflex
+CUPJAR=/users/majors/jhallora/cosc4400/jflex-1.6.1/lib/java-cup-11a.jar
 CUP=$(JAVA) -jar $(CUPJAR) <
 # Specify classpath
 CP=.:$(CUPJAR)

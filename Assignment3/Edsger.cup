@@ -2,7 +2,7 @@
  * Cup file
  * Written by John Halloran
  */
-terminal PLUS, TIMES, LPAREN, RPAREN, LBRACK, RBRACK;
+terminal PLUS, TIMES, LPAREN, RPAREN, LBRACK, RBRACK, RANGE;
 terminal COMMA, MINUS, DIV, COLON, SEMICOLON;
 terminal LEQ, GEQ, EQ, NEQ, GREATER, LESSER, NOT, AND, OR, TRUE, FALSE;
 terminal DO,OD;

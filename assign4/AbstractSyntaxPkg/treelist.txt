@@ -1,0 +1,52 @@
+Program DeclList globals FunList funs StmtList body
+
+$DeclList ArrayList<VarDecl> vlist
+VarDecl String name Type type
+$DestList ArrayList<Guard> dlist
+$ExprList ArrayList<Expr> elist
+$FunList ArrayList<FunDef> flist
+FunDef DeclList outargs String name DeclList inargs DeclList locals StmtList body
+$GuardList ArrayList<GCommand> glist
+GCommand Guard cond Stmt stmt
+$StmtList ArrayList<Stmt> slist
+
+*Type
+IntType:Type
+BoolType:Type
+IntArrayType:Type int begin int end
+BoolArrayType:Type int begin int end
+
+*Stmt
+CompoundStmt:Stmt Stmt stmt CompoundStmt rest
+Assign:Stmt DestList dlist ExprList elist
+If:Stmt GuardList glist
+IfThen:Stmt Guard cond Stmt stmt
+Do:Stmt GuardList glist
+Skip:Stmt
+Display:Stmt ExprList elist
+FunCallStmt:Stmt String name ExprList elist
+
+*Guard
+Equal:Guard Expr e1 Expr e2
+NotEqual:Guard Expr e1 Expr e2
+LessThan:Guard Expr e1 Expr e2
+LessEqual:Guard Expr e1 Expr e2
+GreaterThan:Guard Expr e1 Expr e2
+GreaterEqual:Guard Expr e1 Expr e2
+Not:Guard Guard g
+And:Guard Guard g1 Guard g2
+Or:Guard Guard g1 Guard g2
+True:Guard
+False:Guard
+Id:Guard String name
+ArrayElt:Guard String name Expr index
+FunCallExpr:Guard String name ExprList elist
+
+*Expr
+Plus:Expr Expr e1 Expr e2
+Minus:Expr Expr e1 Expr e2
+Times:Expr Expr e1 Expr e2
+Div:Expr Expr e1 Expr e2
+Neg:Expr Expr e
+Num:Expr int value
+GExpr:Expr Guard g

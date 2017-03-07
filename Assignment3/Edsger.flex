@@ -48,6 +48,7 @@ letter=[A-Za-z]
 "skip" {return new Symbol(sym.SKIP);}
 "<-" {return new Symbol(sym.LARROW);}
 "->" {return new Symbol(sym.RARROW);}
+".." {return new Symbol(sym.RANGE);}
 "[]" {return new Symbol(sym.BOX);}
 "if" {return new Symbol(sym.IF);}
 "fi" {return new Symbol(sym.FI);}
