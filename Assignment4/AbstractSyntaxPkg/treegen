@@ -1,0 +1,112 @@
+# perl script
+#
+# Generate abstract tree classes.
+# '*' before name means abstract class
+# '$' before name means list class (just wrapper
+#        for ArrayList)
+
+while($line = <>){
+  chop $line;
+  next if ($line eq "");
+  @words = split / /,$line;
+  $class = $words[0];
+  if ($class =~ /^\*(.*)$/) { # Abstract class
+    $class = $1;
+    open JAVA,'>',"$class.java";
+    print JAVA "package AbstractSyntaxPkg;\n";
+    print JAVA "import VisitorPkg.*;\n\n";
+    print JAVA "public abstract class $class {\n";
+    # Then boilerplate
+    print JAVA "\n  public abstract void accept(Visitor v);\n\n";
+    print JAVA "  public abstract Object accept(ValueVisitor v);\n\n";    
+    print JAVA "}\n";
+  }
+  elsif ($class =~ /^\$(.*)$/) { # List class
+    $class = $1;
+    $words[1] =~ /ArrayList<(.*)>/;
+    $type = $1;
+    $name = $words[2];
+    open JAVA,'>',"$class.java";
+    print JAVA "package AbstractSyntaxPkg;\n";
+    print JAVA "import VisitorPkg.*;\n";
+    print JAVA "import java.util.ArrayList;\n\n";
+    print JAVA "public class $class {\n";
+    print JAVA "  public ArrayList<$type> $name;\n\n";
+    $bp = "  public $class() {\n".
+  	  "    $name = new ArrayList<$type>();\n".
+    	  "  }\n\n".
+
+          "  public $class($type e) {\n".
+          "    this();\n".
+          "    $name.add(e);\n".
+          "  }\n\n".
+
+          "  public void add($type e){\n".
+          "    $name.add(e);\n".
+          "  }\n\n".
+
+          "  public $type get(int i){\n".
+          "    return $name.get(i);\n".
+          "  }\n\n".
+
+          "  public int size(){\n".
+          "    return $name.size();\n".
+          "  }\n";
+    print JAVA "$bp";   
+    print JAVA "}\n";
+
+  }
+  else {
+    $extends = 0;
+    if ($class =~ /(.*):(.*)/) {
+      $extends = 1;
+      $class = $1;
+      $super = $2;
+    }
+    open JAVA,'>',"$class.java";
+    print JAVA "package AbstractSyntaxPkg;\n";
+    print JAVA "import VisitorPkg.*;\n\n";
+    if ($extends){
+      print JAVA "public class $class extends $super {\n";
+    }
+    else {
+      print JAVA "public class $class {\n";
+    }
+    $params = '';
+    for ($i = 1; $i < $#words; $i += 2){
+      $type = $words[$i];
+      $name = $words[$i+1];
+      print JAVA "  public $type $name;\n";
+      $params = $params." $type a$name,";
+    }
+  
+    chop $params;
+    print JAVA "\n  public $class($params) {\n";
+    for ($i = 1; $i < $#words; $i += 2){
+      $name = $words[$i+1];
+      print JAVA "    $name = a$name;\n";
+    }
+    print JAVA "  }\n";
+    # Then boilerplate
+    $bp = "\n  public void accept(Visitor v) {\n".
+          "    v.visit(this);\n".
+          "  }\n\n".
+          "  public Object accept(ValueVisitor v) {\n".
+          "    return v.visit(this);\n".
+          "  }\n";
+    print JAVA "$bp";
+  
+    print JAVA "}\n";
+    push @classes, $class;
+  }
+}
+  # print "@classes";
+# Print Visitor.java to stdout
+print "package VisitorPkg;\n";
+print "import AbstractSyntaxPkg.*;\n\n";
+print "public interface Visitor{\n";
+foreach $name (@classes) {
+  print "  public void visit($name n);\n";
+}
+print "}\n";
+
