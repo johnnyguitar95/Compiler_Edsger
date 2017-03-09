@@ -1,0 +1,3 @@
+{ tests declerations of array of ints }
+
+[ int (45 34 45 46) ]

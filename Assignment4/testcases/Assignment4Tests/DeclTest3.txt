@@ -1,0 +1,3 @@
+{Tests a decleration of type bool }
+
+[ truth:bool ]

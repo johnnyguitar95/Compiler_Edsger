@@ -1,0 +1,9 @@
+[ var:int ]
+[ vars:bool ( 45 64 ) ]
+
+fun f:int << fib << n:int]
+
+if vars then 
+[] var <- 56
+[] item 
+fi

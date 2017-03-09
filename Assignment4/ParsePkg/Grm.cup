@@ -1,0 +1,144 @@
+package ParsePkg;
+
+import java_cup.runtime.*;
+import AbstractSyntaxPkg.*;
+import VisitorPkg.*;
+
+/*
+ * Dummy CUP file to get sym class defined
+ */
+
+parser code {:
+	public Program getTree() throws java.lang.Exception {
+		Symbol s = parse();
+		return (Program)(s.value);
+	}
+
+:}
+
+
+
+
+terminal PLUS, TIMES, LPAREN, RPAREN, LBRACK, RBRACK;
+terminal COMMA, MINUS, UMINUS, DIV, COLON, SEMICOLON;
+terminal LEQ, GEQ, EQ, NEQ, GREATER, LESSER, NOT, AND, OR, TRUE, FALSE;
+terminal DO,OD;
+terminal IF, FI, THEN, SKIP;
+terminal LARROW, RARROW, BOX;
+terminal Integer NUMBER;
+terminal String ID;
+terminal DISPLAY;
+terminal INT, BOOL;
+terminal FUN, NUF, DOUBLARROW;
+
+
+non terminal Program prog;
+non terminal DeclList decl;
+non terminal FunList funs;
+non terminal StmtList body;
+non terminal DeclList decl_list;
+non terminal Type type;
+non terminal FunDef fundef;
+non terminal DeclList opt_vlist;
+non terminal CompoundStmt stmt;
+non terminal Stmt simple;
+non terminal DestList destlist;
+non terminal ExprList exprlist;
+non terminal GuardList glist;
+non terminal Expr expr;
+non terminal FunCallExpr funcall;
+non terminal GCommand gcommand;
+
+
+precedence nonassoc UMINUS;
+precedence left TIMES, DIV;
+precedence left PLUS, MINUS;
+precedence nonassoc EQ, NEQ, GREATER, LESSER, LEQ, GEQ;
+precedence nonassoc NOT;
+precedence nonassoc AND;
+precedence nonassoc OR;
+
+
+start with prog;
+
+prog ::= decl:globalVars funs:fs body:b  {: RESULT = new Program(globalVars, fs, b); :}
+       ;
+
+decl ::= LBRACK decl_list:dlist RBRACK {: RESULT = dlist; :}
+	|	{: RESULT = new DeclList(); :} 
+	;
+
+decl_list ::= ID:i COLON type:t {: RESULT = new DeclList(new VarDecl(i, t)); :}
+	    | decl_list:dlist COMMA ID:i COLON type:t {: dlist.add(new VarDecl(i, t)); RESULT = dlist; :}
+	    ;
+
+type ::= INT {: RESULT = new IntType(); :}
+       | BOOL {: RESULT = new BoolType(); :}
+       ;
+
+funs ::= funs:flist fundef:fdef {: flist.add(fdef); RESULT = flist; :} 
+       | {: RESULT = new FunList(); :} 
+       ;
+
+fundef ::= FUN opt_vlist:olist1 DOUBLARROW ID:i DOUBLARROW opt_vlist:olist2 RBRACK decl:vars body:instructs NUF {: RESULT = new FunDef(olist1, i, olist2, vars, instructs); :}
+         ;
+
+opt_vlist ::= decl_list:dlist {: RESULT = dlist; :}
+            | {: RESULT = null; :}
+	    ;
+
+body ::= stmt:s {: RESULT = new StmtList(s); :}
+       | body:b stmt:s {: b.add(s); RESULT = b; :}
+       ;
+
+stmt ::= simple:s {: RESULT = new CompoundStmt(s, null); :} 
+       | simple:s SEMICOLON stmt:st {: RESULT = new CompoundStmt(s, st); :}
+       ;
+
+simple ::= destlist:dlist LARROW exprlist:elist {: RESULT = new Assign(dlist, elist); :}
+         | IF glist:g FI {: RESULT = new If(g); :}
+	 | IF expr:e THEN stmt:s FI {: RESULT = new IfThen(e, s); :}
+	 | DO glist:g OD {: RESULT = new Do(g); :}
+	 | SKIP {: RESULT = new Skip(); :}
+	 | DISPLAY exprlist:elist {: RESULT = new Display(elist); :}
+	 | funcall:fc {: RESULT = new FunCallStmt(fc.name, new ExprList(fc)); :}
+	 ;
+
+destlist ::= ID:i {: RESULT = new DestList(new Id(i)); :}
+	   | destlist:dlist COMMA ID:i {: dlist.add(new Id(i)); RESULT = dlist; :}
+	   ;
+
+glist ::= gcommand:g {: RESULT = new GuardList(g); :}
+        | glist:gl BOX gcommand:gc {: gl.add(gc); RESULT = gl; :}
+	;
+
+gcommand ::= expr:e RARROW stmt:s {: RESULT = new GCommand(e, s); :}
+           ;
+
+exprlist ::= expr:e {: RESULT = new ExprList(e); :}
+           | exprlist:el COMMA expr:e {: el.add(e); RESULT = el; :}
+           ;
+
+expr ::= expr:e1 PLUS expr:e2 {: RESULT = new Plus(e1, e2); :}
+       | expr:e1 MINUS expr:e2 {: RESULT = new Minus(e1, e2); :}
+       | expr:e1 TIMES expr:e2 {: RESULT = new Times(e1, e2); :}
+       | expr:e1 DIV expr:e2 {: RESULT = new Div(e1, e2); :}
+       | LPAREN expr:e RPAREN {: RESULT = e; :}
+       | expr:e1 EQ expr:e2 {: RESULT = new Equal(e1, e2); :}
+       | expr:e1 NEQ expr:e2 {: RESULT = new NotEqual(e1, e2); :}
+       | expr:e1 LESSER expr:e2 {: RESULT = new LessThan(e1, e2); :}
+       | expr:e1 LEQ expr:e2 {: RESULT = new LessEqual(e1, e2); :}
+       | expr:e1 GREATER expr:e2 {: RESULT = new GreaterThan(e1, e2); :}
+       | expr:e1 GEQ expr:e2 {: RESULT = new GreaterEqual(e1, e2); :}
+       | NOT expr:e {: RESULT = new Not(e); :}
+       | expr:e1 AND expr:e2 {: RESULT = new And(e1, e2); :}
+       | expr:e1 OR expr:e2 {: RESULT = new Or(e1, e2); :}
+       | TRUE {: RESULT = new True(); :}
+       | FALSE {: RESULT = new False(); :}
+       | NUMBER:n {: RESULT = new Num(n); :}
+       | ID:i {: RESULT = new Id(i); :}
+       | funcall:fc {: RESULT = fc; :}
+       ;
+
+funcall ::= ID:i DOUBLARROW exprlist:el RBRACK {: RESULT = new FunCallExpr(i, el); :}
+          ;
