@@ -5,8 +5,7 @@ import AbstractSyntaxPkg.*;
 import VisitorPkg.*;
 
 /*
- * Dummy CUP file to get sym class defined
- */
+ * Author John Halloran */
 
 parser code {:
 	public Program getTree() throws java.lang.Exception {
