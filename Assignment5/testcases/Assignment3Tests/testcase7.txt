@@ -1,0 +1,6 @@
+{ this is a severely {messed 
+	{ up {comment
+	}
+{ will it handle it }}}
+let's find out}
+[]

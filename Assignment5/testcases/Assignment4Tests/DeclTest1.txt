@@ -1,0 +1,1 @@
+{ Tests for an empty decleration list }

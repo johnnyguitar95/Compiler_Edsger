@@ -1,0 +1,22 @@
+{ recursive Fibonacci sequence }
+
+[ n:int, i:int ]
+
+fun f:int << fib << n:int] {function declaration}
+
+	[ t:int ] {local variable}
+	
+	if n < 1 -> f <- 0
+	[] (n > 0) and (n <= 2) -> f <- 1
+	[] n > 2 -> f <- fib<<n-2] + fib<<n-1]
+	fi
+nuf
+
+x <- fib<<25]
+display x
+i <- 11
+do i <= 20 ->
+	x <- fib<<i];
+	display i, x;
+	i <- i+1
+od

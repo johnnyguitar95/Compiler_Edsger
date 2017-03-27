@@ -1,0 +1,3 @@
+{Tests decleration of type int}
+
+[ num:int ]

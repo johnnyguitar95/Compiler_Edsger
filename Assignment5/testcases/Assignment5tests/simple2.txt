@@ -1,0 +1,4 @@
+[ x:int ]
+
+x <- 45
+display x

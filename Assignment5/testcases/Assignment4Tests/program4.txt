@@ -1,0 +1,17 @@
+[ num1:int , num2:int , num3:int , num4:int , bool1:bool , bool2:bool , bool3:bool ]
+
+num1 <- 34
+num2 <- 5
+num3 <- 3
+bool1 <- true
+bool2 <- false
+bool3 <- true
+
+if num1 > num2 -> num3 <- num1 + num2
+[] bool1 -> num1 <- num3
+[] bool2 and bool3 -> num1 <- num2
+fi
+do (num1 * num3) > num2 -> bool1 <- bool2 and bool3
+[] ((num1*num2)/num3) -> num1 <- num3
+od
+display num1 

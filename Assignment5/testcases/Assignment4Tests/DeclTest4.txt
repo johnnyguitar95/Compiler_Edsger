@@ -1,0 +1,3 @@
+{ Tests multiple declerations }
+
+[ num1:int, bool1:bool, num2:int, bool2:bool ] 
