@@ -1,0 +1,14 @@
+{ This program sorts 4 numbers }
+
+[ a:int,b:int,c:int,d:int ]
+
+a,b,c,d <- 12,3,-2,10
+
+display a,b,c,d
+
+do (a>b) -> a,b <- b,a
+[] (b>c) -> b,c <- c,b
+[] (c>d) -> c,d <- d,c
+od
+
+display a,b,c,d

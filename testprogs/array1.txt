@@ -1,0 +1,14 @@
+{ simple array test }
+
+[ i: int, table:int(1..5), flag:bool(1..5) ]
+
+i <- 1
+do (i <= 5) -> table(i) <- 1+3*i; i <- i+1
+od
+display table(1), table(2), table(3), table(4), table(5)
+i <- 1
+do (i <= 5) -> flag(i) <- (table(i)/2)*2 = table(i); i <- i+1
+od
+i <- 1
+do (i <= 5) -> display table(i), flag(i); i <- i+1
+od

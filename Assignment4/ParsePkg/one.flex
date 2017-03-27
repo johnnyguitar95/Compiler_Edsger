@@ -22,6 +22,7 @@ letter=[A-Za-z]
 
 <YYINITIAL>{
 "(" { return new Symbol(sym.LPAREN); }
+".." {return new Symbol(sym.DDOT); }
 ")" { return new Symbol(sym.RPAREN); }
 "," { return new Symbol(sym.COMMA); }
 "+" { return new Symbol(sym.PLUS); }

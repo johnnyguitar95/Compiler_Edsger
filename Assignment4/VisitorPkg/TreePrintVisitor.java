@@ -18,23 +18,22 @@ public class TreePrintVisitor implements Visitor {
 
   public void visit(Program n){
     indent = "";
-    doIndent();
     for (int i=0; n.globals != null && i < n.globals.size(); i++){
       if(i == 0) System.out.println("Global vars(");
       n.globals.get(i).accept(this);
       System.out.println();
       if(i == n.globals.size()-1) System.out.println(")");
     }//end for loop for global variables
-    undoIndent();
+    
 
-    doIndent();
     for(int i=0; i<n.funs.size(); i++){
       if(i == 0) System.out.println("Functions(");
+      doIndent();
       n.funs.get(i).accept(this);
       System.out.println();
+      undoIndent();
       if(i == n.funs.size()-1) System.out.println(")");
     }//end for loop for function list
-    undoIndent();
 
     System.out.println("Body {");
     doIndent();
@@ -102,51 +101,65 @@ public class TreePrintVisitor implements Visitor {
   public void visit(GCommand n){
   	System.out.println(indent + "GCommand {");
 	doIndent();
+	System.out.print(indent + "EXPR:");
 	n.cond.accept(this);
-	System.out.println("\n" + indent + "Statement");
+	System.out.println("\n" + indent + "Statement{");
+	doIndent();
 	n.stmt.accept(this);
 	undoIndent();
+	undoIndent();
+	System.out.println(indent + "}end GCommand");
   }
-  public void visit(IntArrayType n){}
-  public void visit(BoolArrayType n){}
+  public void visit(IntArrayType n){
+  	System.out.print("int indexes " + n.begin + ".." + n.end);
+  }
+  public void visit(BoolArrayType n){
+  	System.out.print("bool indexes " + n.begin + ".." + n.end);
+  }
   public void visit(CompoundStmt n){
 	n.stmt.accept(this);
-	System.out.println(indent + ";");
+//	System.out.println(indent + ";");
 	if(n.rest != null)
 		n.rest.accept(this);
   }
 
-  public void visit(Assign n){
-      doIndent(); 
+  public void visit(Assign n){ 
       if(n.dlist.size() != n.elist.size()){
 	      System.out.println("ERROR!!!!! ASSIGNMENT!!!");
 	      System.exit(0);
       }
+      System.out.println(indent + "Assign(");
+      doIndent();
       for(int i = 0; i<n.dlist.size(); i++){
+	System.out.print(indent);
 	n.dlist.get(i).accept(this);
-        System.out.print(indent + "<-");
+        System.out.print("<-");
 	n.elist.get(i).accept(this);
 	System.out.println();
       }
       undoIndent();
+      System.out.println(indent + ") End Assign");
   }
-  public void visit(If n){
+  public void visit(If n){   
+      System.out.println(indent + "if{");
       doIndent();
-      System.out.println(indent + "if");
       for(int i = 0; i<n.glist.size(); i++){
 	      n.glist.get(i).accept(this);
       }
       undoIndent();
-  }
+      System.out.println(indent + "} end if");
+    }
   public void visit(IfThen n){
-      System.out.println(indent + "if");
+      System.out.println(indent + "if (then){");
       doIndent();
       n.cond.accept(this);
       undoIndent();
-      System.out.println(indent + "then");
+      System.out.println(indent + "} end if (then)");
+      System.out.println(indent + "then{ ");
       doIndent();
       n.stmt.accept(this);
       undoIndent();
+      System.out.println(indent + "} END then");
   }
   public void visit(Do n){
       System.out.println(indent + "DO{");
@@ -155,7 +168,7 @@ public class TreePrintVisitor implements Visitor {
          n.glist.get(i).accept(this);
       }
       undoIndent();
-      System.out.println(indent + "}");
+      System.out.println(indent + "} END DO");
   }
   public void visit(Skip n){
       System.out.println(indent + "SKIP");
@@ -164,9 +177,11 @@ public class TreePrintVisitor implements Visitor {
       System.out.print(indent + "Display(");
       for(int i = 0; i<n.elist.size(); i++){
          n.elist.get(i).accept(this);
+	 if(i < n.elist.size()-1)
+		 System.out.print(indent);
       }
       
-      System.out.println(indent + ")");
+      System.out.println(") End Display");
   }
 
   public void visit(FunCallStmt n){
@@ -182,89 +197,101 @@ public class TreePrintVisitor implements Visitor {
       System.out.println("End function Call");
   }
   public void visit(Plus n){
-	System.out.print(indent);
-  	n.e1.accept(this);
+  	System.out.print("ADD{");
+	n.e1.accept(this);
 	System.out.print(" + ");
 	n.e2.accept(this);
+	System.out.print("} END ADD");
   }
   public void visit(Minus n){
-  	
-	System.out.print(indent);
-  	n.e1.accept(this);
+	System.out.print("SUB{");	
 	n.e1.accept(this);
 	System.out.print(" - ");
 	n.e2.accept(this);
+	System.out.print("} END SUB");
   }
   public void visit(Times n){
-  	
-	System.out.print(indent);
+  	System.out.print("MULT{");	
 	n.e1.accept(this);
 	System.out.print(" * ");
 	n.e2.accept(this);
+	System.out.print("} END MULT");
   }
   public void visit(Div n){
-  	System.out.print(indent);
+  	System.out.print("DIVIDE {");
 	n.e1.accept(this);
 	System.out.print(" / ");
 	n.e2.accept(this);
+	System.out.print("} End DIVIDE");
   }
   public void visit(Neg n){
-  	
+  	System.out.print("NEG {");
+	n.e.accept(this);
+	System.out.print("}END NEG");
   }
   public void visit(Num n){
   	System.out.print(n.value);
   }
   public void visit(Equal n){
-  	System.out.print(indent);
-	n.e1.accept(this);
-	System.out.print(" = ");
+	System.out.print("EQUAL {");
+  	n.e1.accept(this);
+	System.out.print(" == ");
 	n.e2.accept(this);
+	System.out.print("}END EQUAL");
   }
   public void visit(NotEqual n){
-  	System.out.print(indent);
-	n.e1.accept(this);
+	System.out.print("NOTEQUAL {");
+  	n.e1.accept(this);
 	System.out.print(" <> ");
 	n.e2.accept(this);
+	System.out.print("}END NOTEQUAL");
   }
   public void visit(LessThan n){
-  	System.out.print(indent);
-	n.e1.accept(this);
+	System.out.print("LESSTHAN {");
+  	n.e1.accept(this);
 	System.out.print(" < " );
 	n.e2.accept(this);
+	System.out.print("} END LESSTHAN");
   }
   public void visit(LessEqual n){
-  	System.out.print(indent);
-	n.e1.accept(this);
+	System.out.print("LESSEQUAL {");
+  	n.e1.accept(this);
 	System.out.print(" <= " );
 	n.e2.accept(this);
+	System.out.print("} END LESSEQUAL");
   }
   public void visit(GreaterThan n){
-  	System.out.print(indent);
-	n.e1.accept(this);
+	System.out.print("GREATERTHAN {");
+  	n.e1.accept(this);
 	System.out.print(" > ");
 	n.e2.accept(this);
+	System.out.print("}END GREATERTHAN");
   }
   public void visit(GreaterEqual n){
-  	System.out.print(indent);
-	n.e1.accept(this);
+	System.out.print("GREATEREQUAL {");
+  	n.e1.accept(this);
 	System.out.print(" >= ");
 	n.e2.accept(this);
+	System.out.print("} END GREATEREQUAL");
   }
   public void visit(Not n){
-  	System.out.print(indent + "not ");
+  	System.out.print("NOT{ ");
 	n.g.accept(this);
+	System.out.print("}END NOT");
   }
   public void visit(And n){
-  	System.out.print(indent);
-	n.g1.accept(this);
+	System.out.print("AND {");
+  	n.g1.accept(this);
 	System.out.print(" and ");
 	n.g2.accept(this);
+	System.out.print("} END AND");
   }
   public void visit(Or n){
-	System.out.print(indent);
+	System.out.print("OR {");
 	n.g1.accept(this);
 	System.out.print(" or ");
 	n.g2.accept(this);
+	System.out.print("}END OR");
   }
   public void visit(True n){
   	System.out.print("true");
@@ -273,20 +300,26 @@ public class TreePrintVisitor implements Visitor {
   	System.out.print("false");
   }
   public void visit(Id n){
-  	System.out.print(n.name);
+  	System.out.print("ID:" + n.name);
   }
-  public void visit(ArrayElt n){}
+  public void visit(ArrayElt n){
+  	System.out.print("ArrayElt{");
+	System.out.print("ID:" + n.name);
+	System.out.print("\tIndex:");
+	n.index.accept(this);
+	System.out.print("}END ArrayElt");
+  }
   public void visit(FunCallExpr n){
-  	System.out.println(indent + "FunCall Expr { ");
-	doIndent();
-	System.out.println(indent + "Name: " + n.name);
+  	System.out.print("FunCall Expr { ");
+	System.out.println("Name: " + n.name);
 	doIndent();
 	for(int i = 0; i<n.elist.size(); i++){
+		System.out.print(indent);
 		n.elist.get(i).accept(this);
 	}
 	undoIndent();
-	undoIndent();
-	System.out.println(indent + "}");
+	System.out.println();
+	System.out.println(indent + "}End FunCall Expr for " + n.name);
   }
  
 }

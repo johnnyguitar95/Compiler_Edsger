@@ -18,7 +18,7 @@ parser code {:
 
 
 
-terminal PLUS, TIMES, LPAREN, RPAREN, LBRACK, RBRACK;
+terminal PLUS, TIMES, LPAREN, RPAREN, LBRACK, RBRACK, DDOT;
 terminal COMMA, MINUS, UMINUS, DIV, COLON, SEMICOLON;
 terminal LEQ, GEQ, EQ, NEQ, GREATER, LESSER, NOT, AND, OR, TRUE, FALSE;
 terminal DO,OD;
@@ -48,14 +48,16 @@ non terminal Expr expr;
 non terminal FunCallExpr funcall;
 non terminal GCommand gcommand;
 
-
-precedence nonassoc UMINUS;
-precedence left TIMES, DIV;
-precedence left PLUS, MINUS;
-precedence nonassoc EQ, NEQ, GREATER, LESSER, LEQ, GEQ;
-precedence nonassoc NOT;
-precedence nonassoc AND;
+//precedences 
 precedence nonassoc OR;
+precedence nonassoc AND;
+precedence nonassoc EQ, NEQ;
+precedence nonassoc GREATER, LESSER, LEQ, GEQ;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIV;
+precedence nonassoc NOT;
+precedence nonassoc UMINUS; 
+
 
 
 start with prog;
@@ -72,7 +74,9 @@ decl_list ::= ID:i COLON type:t {: RESULT = new DeclList(new VarDecl(i, t)); :}
 	    ;
 
 type ::= INT {: RESULT = new IntType(); :}
+       | INT LPAREN NUMBER:n1 DDOT NUMBER:n2 RPAREN {: RESULT = new IntArrayType(n1, n2); :}
        | BOOL {: RESULT = new BoolType(); :}
+       | BOOL LPAREN NUMBER:n1 DDOT NUMBER:n2 RPAREN {: RESULT = new BoolArrayType(n1, n2); :}	
        ;
 
 funs ::= funs:flist fundef:fdef {: flist.add(fdef); RESULT = flist; :} 
@@ -100,11 +104,13 @@ simple ::= destlist:dlist LARROW exprlist:elist {: RESULT = new Assign(dlist, el
 	 | DO glist:g OD {: RESULT = new Do(g); :}
 	 | SKIP {: RESULT = new Skip(); :}
 	 | DISPLAY exprlist:elist {: RESULT = new Display(elist); :}
-	 | funcall:fc {: RESULT = new FunCallStmt(fc.name, new ExprList(fc)); :}
+	 | funcall:fc {: RESULT = new FunCallStmt(fc.name, fc.elist); :}
 	 ;
 
 destlist ::= ID:i {: RESULT = new DestList(new Id(i)); :}
+	   | ID:i LPAREN expr:e RPAREN {: RESULT = new DestList(new ArrayElt(i, e)); :}
 	   | destlist:dlist COMMA ID:i {: dlist.add(new Id(i)); RESULT = dlist; :}
+	   | destlist:dlist COMMA ID:i LPAREN expr:e RPAREN {: dlist.add(new ArrayElt(i, e)); RESULT = dlist; :}
 	   ;
 
 glist ::= gcommand:g {: RESULT = new GuardList(g); :}
@@ -122,6 +128,7 @@ expr ::= expr:e1 PLUS expr:e2 {: RESULT = new Plus(e1, e2); :}
        | expr:e1 MINUS expr:e2 {: RESULT = new Minus(e1, e2); :}
        | expr:e1 TIMES expr:e2 {: RESULT = new Times(e1, e2); :}
        | expr:e1 DIV expr:e2 {: RESULT = new Div(e1, e2); :}
+       | MINUS expr:e {: RESULT = new Neg(e); :}
        | LPAREN expr:e RPAREN {: RESULT = e; :}
        | expr:e1 EQ expr:e2 {: RESULT = new Equal(e1, e2); :}
        | expr:e1 NEQ expr:e2 {: RESULT = new NotEqual(e1, e2); :}
@@ -136,6 +143,7 @@ expr ::= expr:e1 PLUS expr:e2 {: RESULT = new Plus(e1, e2); :}
        | FALSE {: RESULT = new False(); :}
        | NUMBER:n {: RESULT = new Num(n); :}
        | ID:i {: RESULT = new Id(i); :}
+       | ID:i LPAREN expr:e RPAREN {: RESULT = new ArrayElt(i, e); :}
        | funcall:fc {: RESULT = fc; :}
        ;
 
