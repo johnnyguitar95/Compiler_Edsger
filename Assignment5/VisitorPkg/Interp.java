@@ -52,20 +52,18 @@ public class Interp implements Visitor
 	        n.rest.accept(this);
 	}
   	public void visit(Assign n){
-	   // System.out.println("dlist size: " + n.dlist.dlist.size() + " vs elist:" + n.elist.elist.size());
-	    for(int x = 0; x<n.dlist.dlist.size(); x++){
-		if(n.dlist.dlist.get(x) instanceof Id){
-//		    System.out.println("Assign #" + x);
-//		    System.out.println(((Id)n.dlist.dlist.get(x)).name);
-		    VarInfo temp = symTable.get(((Id)n.dlist.dlist.get(x)).name);
-//		    System.out.println("Created temp");
-//		    System.out.println(n.elist.elist.get(x).accept(eval));
-		    temp.value = n.elist.elist.get(x).accept(eval);
-//		    System.out.println("Set new value" + temp.value); 
-		    symTable.put(((Id)n.dlist.dlist.get(x)).name, temp);
-		}
-	     }
-	}
+
+	    VarInfo temp[] = new VarInfo[n.elist.elist.size()];
+	    for(int x = 0; x < temp.length; x++){
+		Object v = n.elist.elist.get(x).accept(eval);
+		if(v instanceof Integer)
+		    temp[x] = new VarInfo(new IntType(), v);
+		else if(v instanceof Boolean)
+		    temp[x] = new VarInfo(new BoolType(), v);
+	    }
+	    for(int x = 0; x < temp.length; x++){
+	        symTable.put(((Id) n.dlist.dlist.get(x)).name, temp[x]);
+	}}
   	public void visit(If n){
 	    for(int x = 0; x<n.glist.size(); x++){
 		if((Boolean)n.glist.get(x).cond.accept(eval)){

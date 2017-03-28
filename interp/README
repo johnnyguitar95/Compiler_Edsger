@@ -1,0 +1,4 @@
+These files use java_cup to create a simple parser for the demo
+language we've discussed in class.
+The parser constructs a syntax tree for the input program
+then interprets the tree.

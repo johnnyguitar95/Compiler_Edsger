@@ -117,24 +117,26 @@ public class TreePrintVisitor implements Visitor {
   	System.out.print("bool indexes " + n.begin + ".." + n.end);
   }
   public void visit(CompoundStmt n){
+	System.out.println(indent + "Compound stmt {");
 	n.stmt.accept(this);
 //	System.out.println(indent + ";");
 	if(n.rest != null)
 		n.rest.accept(this);
+	System.out.println(indent + "}END COMPOUND");
   }
 
   public void visit(Assign n){ 
-      if(n.dlist.size() != n.elist.size()){
+      if(n.dlist.dlist.size() != n.elist.elist.size()){
 	      System.out.println("ERROR!!!!! ASSIGNMENT!!!");
 	      System.exit(0);
       }
       System.out.println(indent + "Assign(");
       doIndent();
-      for(int i = 0; i<n.dlist.size(); i++){
+      for(int i = 0; i<n.dlist.dlist.size(); i++){
 	System.out.print(indent);
-	n.dlist.get(i).accept(this);
+	n.dlist.dlist.get(i).accept(this);
         System.out.print("<-");
-	n.elist.get(i).accept(this);
+	n.elist.elist.get(i).accept(this);
 	System.out.println();
       }
       undoIndent();

@@ -1,0 +1,9 @@
+$ check error tests $
+
+a <- 12.
+b <- 3*c.
+output a,b,c.
+d <- a/b.
+output a,b,c,d.
+output a,b,c,d,e.
+

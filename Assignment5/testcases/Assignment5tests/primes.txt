@@ -1,4 +1,4 @@
-[ k:int,n:int,flag:boolean, d:int,a:int,limit:int ]
+[ k:int,n:int,flag:bool, d:int,a:int,limit:int ]
 
 k <- 0
 n <- 2

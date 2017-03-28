@@ -1,0 +1,15 @@
+$ Just getting silly with nesting $
+
+a <- 4*(6+2).
+do
+  a <- a+1.
+  output 123.
+  do
+    b <- a+2.
+    output 456.
+    do
+       a <- b+3.
+       output 789,a,b.
+    unless a <= b.
+  unless a <= 32.
+unless 33 <= a.
