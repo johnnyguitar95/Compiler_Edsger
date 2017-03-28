@@ -10,7 +10,8 @@ public class Main {
   public static void main(String[] args) throws java.lang.Exception {
 	Reader inp = new InputStreamReader(System.in);
     Program root = new parser(new Yylex(inp)).getTree();
-    root.accept(new TreePrintVisitor());
+//    root.accept(new TreePrintVisitor());
+    root.accept(new Interp());
     //root.accept(new PrettyPrintVisitor());
   }
 }

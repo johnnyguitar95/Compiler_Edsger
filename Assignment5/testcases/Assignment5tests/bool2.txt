@@ -1,0 +1,14 @@
+{simple boolean tests}
+
+display 4 > 5
+display 5 > 3
+display 6 < 10
+display 10 < 6
+display 10 <= 10
+display 13 >= 9
+display true and true
+display true and false
+display true or false
+display not false
+display 5 > 9 or 9 < 10
+display 20 * 5 >= 100 

@@ -1,0 +1,75 @@
+Expected output for the programs in this
+directory.  Remember, there might be Edsger bugs
+in these programs - I wrote them but have never
+run them [because only someone with an Edsger
+interpreter can run them :-) ]
+
+[We'll fill in the outputs in class on Mar 24]
+
+-------------
+easy1.txt
+-------------
+5
+-------------
+easy2.txt
+-------------
+65
+-------------
+easy3.txt
+-------------
+145
+-------------
+handout1.txt
+-------------
+4 6
+2
+-------------
+sort.txt
+-------------
+12 3 -2 10
+-2 3 10 12
+-------------
+if-test.txt
+-------------
+222
+111
+333
+-------------
+mult-table.txt
+-------------
+16 20 24 28 32 36
+20 25 30 35 40 45
+24 30 36 42 48 54
+28 35 42 49 56 63
+32 40 48 56 64 72
+36 45 54 63 72 81
+-------------
+primes.txt
+-------------
+2 3 5 7 11 13 17 19 ..........
+-------------
+array1.txt
+-------------
+4 7 10 13 16
+4 true
+7 flase
+10 true
+13 false
+16 true
+-------------
+sort2.txt
+-------------
+4 
+-2
+9 
+8
+20
+-10
+3
+5
+10
+888 888 888 888
+-10
+-2
+17
+9

@@ -1,0 +1,9 @@
+{this is a bunch of basic arithmetic}
+
+display 4+6
+display 8-9
+display 9*45
+display 88/11
+display -2
+display -3+9
+display 4*5+68/4

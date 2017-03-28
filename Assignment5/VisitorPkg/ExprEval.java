@@ -6,48 +6,135 @@ import java.util.HashMap;
 
 public class ExprEval implements ValueVisitor {
 	
-	HashMap<STring, Object> symTable;
+	HashMap<String, VarInfo> symTable;
+	
 
-	public ExprEval(HashMap<String, Object> symTable){
+	public ExprEval(HashMap<String, VarInfo> symTable){
 		this.symTable = symTable;
 	}
 
-  	public Object visit(Program n){}
-	public Object visit(VarDecl n){}
-  	public Object visit(FunDef n){}
-  	public Object visit(GCommand n){}
-  	public Object visit(IntType n){}
-  	public Object visit(BoolType n){}
-  	public Object visit(IntArrayType n){}
-  	public Object visit(BoolArrayType n){}
-  	public Object visit(CompoundStmt n){}
-  	public Object visit(Assign n){}
-  	public Object visit(If n){}
-  	public Object visit(IfThen n){}
-  	public Object visit(Do n){}
-  	public Object visit(Skip n){}
-  	public Object visit(Display n){}
-  	public Object visit(FunCallStmt n){}
-  	public Object visit(Plus n){}
-  	public Object visit(Minus n){}
-  	public Object visit(Times n){}
-  	public Object visit(Div n){}
-  	public Object visit(Neg n){}
-  	public Object visit(Num n){}
-  	public Object visit(Equal n){}
-  	public Object visit(NotEqual n){}
-  	public Object visit(LessThan n){}
-  	public Object visit(LessEqual n){}
-  	public Object visit(GreaterThan n){}
-  	public Object visit(GreaterEqual n){}
-  	public Object visit(Not n){}
-  	public Object visit(And n){}
-  	public Object visit(Or n){}
-  	public Object visit(True n){}
-  	public Object visit(False n){}
-  	public Object visit(Id n){}
-  	public Object visit(ArrayElt n){}
-  	public Object visit(FunCallExpr n){}
-	
+  	public Object visit(Program n){
+		return null;
+	}
+	public Object visit(VarDecl n){
+		return null;
+	}
+  	public Object visit(FunDef n){
+		return null;
+	}
+  	public Object visit(GCommand n){
+		return null;
+	}
+  	public Object visit(IntType n){
+		return null;
+	}
+  	public Object visit(BoolType n){
+		return null;
+	}
+  	public Object visit(IntArrayType n){
+		return null;
+	}
+  	public Object visit(BoolArrayType n){
+		return null;
+	}
+  	public Object visit(CompoundStmt n){
+		return null;
+	}
+  	public Object visit(Assign n){
+		return null;
+	}
+  	public Object visit(If n){
+		return null;
+	}
+  	public Object visit(IfThen n){
+		return null;
+	}
+  	public Object visit(Do n){
+		return null;
+	}
+  	public Object visit(Skip n){
+		return null;
+	}
+  	public Object visit(Display n){
+		return null;
+	}
+  	public Object visit(FunCallStmt n){
+		return null;
+	}
+  	public Object visit(Plus n){
+		return (Integer)((Integer)(n.e1.accept(this)) + (Integer)(n.e2.accept(this)));
+	}
+  	public Object visit(Minus n){
+		return (Integer)((Integer)(n.e1.accept(this)) - (Integer)(n.e2.accept(this)));
+	}
+  	public Object visit(Times n){
+		return (Integer)((Integer)(n.e1.accept(this)) * (Integer)(n.e2.accept(this)));
+	}
+  	public Object visit(Div n){
+		Integer num = (Integer)n.e2.accept(this);
+		if(num.equals(new Integer(0))){
+			System.out.println("DIVIDE BY ZERO");
+			System.out.println("SHUTTING DOWN EDSGER");
+			System.exit(0);
+		}
+		return (Integer)((Integer)(n.e1.accept(this)) / num);
+	}
+  	public Object visit(Neg n){
+		return -1*(Integer)(n.e.accept(this));
+	}
+  	public Object visit(Num n){
+		return (Integer) n.value;
+	}
+  	public Object visit(Equal n){
+		return (Boolean)((Integer)n.e1.accept(this) == (Integer)n.e2.accept(this));
+	}
+  	public Object visit(NotEqual n){
+		return (Boolean)((Integer)n.e1.accept(this) != (Integer)n.e2.accept(this));
+	}
+  	public Object visit(LessThan n){
+		return (Boolean)((Integer)n.e1.accept(this) < (Integer)n.e2.accept(this));
+	}
+  	public Object visit(LessEqual n){
+		return (Boolean)((Integer)n.e1.accept(this) <= (Integer)n.e2.accept(this));
+	}
+  	public Object visit(GreaterThan n){
+		return (Boolean)((Integer)n.e1.accept(this) > (Integer)n.e2.accept(this));
+	}
+  	public Object visit(GreaterEqual n){
+		return (Boolean)((Integer)n.e1.accept(this) >= (Integer)n.e2.accept(this));
+	}
+  	public Object visit(Not n){
+		return (Boolean)(!(Boolean)n.g.accept(this));
+	}
+  	public Object visit(And n){
+		return (Boolean)((Boolean)n.g1.accept(this) && (Boolean)n.g2.accept(this));
+	}
+  	public Object visit(Or n){
+		return (Boolean)((Boolean)n.g1.accept(this) || (Boolean)n.g2.accept(this));
+	}
+  	public Object visit(True n){
+		return (Boolean)true;
+	}
+  	public Object visit(False n){
+		return (Boolean)false;
+	}
+  	public Object visit(Id n){
+		Object v = symTable.get(n.name).value;
+		if(v == null){
+		    System.out.println("Uninitialized variable: " + n.name);
+		    System.out.println("Closing Edsger");
+		    System.exit(0);
+		}
+		return v;
+	}
+  	public Object visit(ArrayElt n){
+		return null;
+	}
+  	public Object visit(FunCallExpr n){
+		return null;
+	}
 
+	public String toString(){
+		return "I am still here";
+	}
 }

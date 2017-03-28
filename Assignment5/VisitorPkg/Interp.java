@@ -3,29 +3,110 @@ package VisitorPkg;
 import AbstractSyntaxPkg.*;
 import ParsePkg.*;
 import java.util.HashMap;
-
+import java.util.ArrayList;
 public class Interp implements Visitor
 {
-	HashMap<String, Object> symTable = new HashMap<String, Integer>();
-
+	HashMap<String, VarInfo> symTable = new HashMap<String, VarInfo>();
 	ValueVisitor eval = new ExprEval(symTable);
 
-	public void visit(Program n){}
-  	public void visit(VarDecl n){}
+	public void visit(Program n){
+	    for(int x = 0; x<n.globals.vlist.size(); x++){
+		n.globals.vlist.get(x).accept(this);
+	    }
+	    
+	    for(int i = 0; i<n.body.size(); i++){
+		    n.body.get(i).accept(this);
+	    }
+
+
+	    System.out.println("Fin");	
+	}
+
+  	public void visit(VarDecl n){
+	    if(n.type instanceof IntType || n.type instanceof BoolType)
+	    {	//System.out.println("Adding new variable");
+		    if(n.type instanceof IntType)
+      		        symTable.put(n.name, new VarInfo(new IntType(), null));
+		    if(n.type instanceof BoolType)
+			symTable.put(n.name, new VarInfo(new BoolType(), null));
+	    }
+	    //System.out.println("Added: " + n.name);
+	    
+	}
+
+	//not necessary
   	public void visit(FunDef n){}
-  	public void visit(GCommand n){}
-  	public void visit(IntType n){}
+  	
+	public void visit(GCommand n){}
+  	
+	//not necessary - yet?
+	public void visit(IntType n){}
   	public void visit(BoolType n){}
   	public void visit(IntArrayType n){}
   	public void visit(BoolArrayType n){}
-  	public void visit(CompoundStmt n){}
-  	public void visit(Assign n){}
-  	public void visit(If n){}
-  	public void visit(IfThen n){}
-  	public void visit(Do n){}
+  	
+	public void visit(CompoundStmt n){
+	    //System.out.println("COMPOUND");
+	    n.stmt.accept(this);
+	    if(n.rest != null)
+	        n.rest.accept(this);
+	}
+  	public void visit(Assign n){
+	   // System.out.println("dlist size: " + n.dlist.dlist.size() + " vs elist:" + n.elist.elist.size());
+	    for(int x = 0; x<n.dlist.dlist.size(); x++){
+		if(n.dlist.dlist.get(x) instanceof Id){
+//		    System.out.println("Assign #" + x);
+//		    System.out.println(((Id)n.dlist.dlist.get(x)).name);
+		    VarInfo temp = symTable.get(((Id)n.dlist.dlist.get(x)).name);
+//		    System.out.println("Created temp");
+//		    System.out.println(n.elist.elist.get(x).accept(eval));
+		    temp.value = n.elist.elist.get(x).accept(eval);
+//		    System.out.println("Set new value" + temp.value); 
+		    symTable.put(((Id)n.dlist.dlist.get(x)).name, temp);
+		}
+	     }
+	}
+  	public void visit(If n){
+	    for(int x = 0; x<n.glist.size(); x++){
+		if((Boolean)n.glist.get(x).cond.accept(eval)){
+		    n.glist.get(x).stmt.accept(this);
+		    break;
+		}
+	        if(x == (n.glist.size()-1)){
+		    System.out.println("INVALID IF");
+		    System.exit(0);
+		}
+	    }
+	}
+  	public void visit(IfThen n){
+	    if((Boolean)n.cond.accept(eval))
+		    n.stmt.accept(this);
+	}
+  	public void visit(Do n){
+	    //System.out.println("DO");
+	    //System.out.println("Glist size: " + n.glist.size());
+	    for(int i = 0; i<n.glist.size(); i++){
+	    	if((Boolean)n.glist.get(i).cond.accept(eval)){
+			//System.out.println("Success");
+			n.glist.get(i).stmt.accept(this);
+			i = -1;
+			//System.out.println("Start from the top again");
+		}
+	     }
+	}
   	public void visit(Skip n){}
-  	public void visit(Display n){}
-  	public void visit(FunCallStmt n){}
+  	
+	public void visit(Display n){
+	    for(int x = 0; x < n.elist.size(); x++){
+		if( x > 0)
+		    System.out.print(",");
+		System.out.print(n.elist.get(x).accept(eval));
+	    }
+	    System.out.println();
+	}
+
+  	//Not necessary
+	public void visit(FunCallStmt n){}
   	public void visit(Plus n){}
   	public void visit(Minus n){}
   	public void visit(Times n){}

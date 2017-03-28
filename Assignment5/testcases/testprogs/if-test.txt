@@ -1,0 +1,21 @@
+{ a stupid little program to test multiple
+ branch if's }
+[ x:int ]
+
+x <- 7
+if x<=0 -> display 111
+[] x>=0 -> display 222
+[] x=0 -> display 333
+fi
+
+x <- -2
+if x<=0 -> display 111
+[] x>=0 -> display 222
+[] x=0 -> display 333
+fi
+
+x <- 0  { this should only do one branch - but any one is ok }
+if x<=0 -> display 111
+[] x>=0 -> display 222
+[] x=0 -> display 333
+fi

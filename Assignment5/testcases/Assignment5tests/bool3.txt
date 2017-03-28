@@ -1,0 +1,7 @@
+[ b:bool ]
+
+b <- false
+display b 
+display 5 < 10 or b
+display not b
+display true and b

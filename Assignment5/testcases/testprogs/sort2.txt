@@ -1,0 +1,36 @@
+{ Silly sort printing the min of unprinted numbers
+ repeatedly.
+ 
+ written by mike slattery, mar 2017 }
+ 
+[ nums:int(1..20), used:bool(1..20), N:int, i:int,
+   min:int, minI:int, count:int ]
+
+N <- 10
+nums(1),nums(2),nums(3),nums(4),nums(5) <- 4,-2,17,9,8
+nums(6),nums(7),nums(8),nums(9),nums(10) <- 20,-10,3,5,10
+i <- 1
+do i <= N -> display nums(i);
+             i <- i + 1
+od
+
+{ Print a separator line }
+display 888,888,888,888
+
+i <- 1
+do i <= N -> used(i) <- false;
+             i <- i + 1
+od
+count <- 0
+do count <= N ->	i, min, mini <- 1, 9999, -1;
+			do i <= N -> {this next stmt could be an if-then, but I just wanted
+			               to test out multipart-if here }
+			             if not used(i) and nums(i) < min -> min, minI <- nums(i), i        
+			             [] used(i) or nums(i) >= min -> skip
+			             fi;
+			             i <- i + 1
+			od;
+			display min;
+			used(minI) <- true;
+			count <- count + 1
+od

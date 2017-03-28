@@ -1,0 +1,21 @@
+
+[ k:int,n:int,flag:bool, d:int,a:int,limit:int ]
+
+k <- 0
+n <- 2
+do (k<20)->
+	flag,d,limit <- true,2,n/2;
+	do (d<=limit) and flag ->
+		a <- n/d;
+		if d*a = n then
+			flag <- false
+		fi;
+		d <- d + 1
+	od;
+	if flag then
+		display n;
+		k <- k+1
+	fi;
+	n <- n+1
+od
+
