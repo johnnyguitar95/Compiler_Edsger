@@ -27,8 +27,19 @@ public class Interp implements Visitor
 	    {	//System.out.println("Adding new variable");
 		    if(n.type instanceof IntType)
       		        symTable.put(n.name, new VarInfo(new IntType(), null));
-		    if(n.type instanceof BoolType)
+		    else
 			symTable.put(n.name, new VarInfo(new BoolType(), null));
+	    }
+            else if(n.type instanceof IntArrayType || n.type instanceof BoolArrayType)
+	    {
+		if(n.type instanceof IntArrayType){
+			ArrayList<Integer> ints = new ArrayList<Integer>((((IntArrayType)n.type).end+1)-((IntArrayType)n.type).begin);
+			symTable.put(n.name, new VarInfo(new IntArrayType(((IntArrayType)n.type).begin, ((IntArrayType)n.type).end), ints));
+                }else{
+			ArrayList<Boolean> bools = new ArrayList<Boolean>((((BoolArrayType)n.type).end+1)-((BoolArrayType)n.type).begin);
+			symTable.put(n.name, new VarInfo(new BoolArrayType(((BoolArrayType)n.type).begin, ((BoolArrayType)n.type).end), bools));
+		}
+
 	    }
 	    //System.out.println("Added: " + n.name);
 	    
@@ -52,7 +63,6 @@ public class Interp implements Visitor
 	        n.rest.accept(this);
 	}
   	public void visit(Assign n){
-
 	    VarInfo temp[] = new VarInfo[n.elist.elist.size()];
 	    for(int x = 0; x < temp.length; x++){
 		Object v = n.elist.elist.get(x).accept(eval);
@@ -62,8 +72,14 @@ public class Interp implements Visitor
 		    temp[x] = new VarInfo(new BoolType(), v);
 	    }
 	    for(int x = 0; x < temp.length; x++){
-	        symTable.put(((Id) n.dlist.dlist.get(x)).name, temp[x]);
-	}}
+	        if(n.dlist.dlist.get(x) instanceof Id)
+		    symTable.put(((Id) n.dlist.dlist.get(x)).name, temp[x]);
+		else{
+			System.out.println("Setting array with " + temp[x].value);
+		    ((ArrayList<Object>)symTable.get(((ArrayElt) n.dlist.dlist.get(x)).name).value).set(x, temp[x].value);
+		    
+	    }}
+	}
   	public void visit(If n){
 	    for(int x = 0; x<n.glist.size(); x++){
 		if((Boolean)n.glist.get(x).cond.accept(eval)){

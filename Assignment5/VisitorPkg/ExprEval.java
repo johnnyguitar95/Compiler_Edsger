@@ -3,7 +3,7 @@ package VisitorPkg;
 import AbstractSyntaxPkg.*;
 import ParsePkg.*;
 import java.util.HashMap;
-
+import java.util.ArrayList;
 public class ExprEval implements ValueVisitor {
 	
 	HashMap<String, VarInfo> symTable;
@@ -128,7 +128,13 @@ public class ExprEval implements ValueVisitor {
 		return v;
 	}
   	public Object visit(ArrayElt n){
-		return null;
+		Object v = ((ArrayList<Object>)symTable.get(n.name).value).get((Integer)n.index.accept(this));
+		if(v == null){
+			System.out.println("Uninitialized variable: " + n.name);
+			System.out.println("Closing Edsger");
+			System.exit(0);
+		}
+		return v;
 	}
   	public Object visit(FunCallExpr n){
 		return null;
