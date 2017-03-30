@@ -8,7 +8,8 @@ public class ExprEval implements ValueVisitor {
 	
 	HashMap<String, VarInfo> symTable;
 	
-
+	private final Integer trueInt = 1;
+	private final Integer falseInt = 0;
 	public ExprEval(HashMap<String, VarInfo> symTable){
 		this.symTable = symTable;
 	}

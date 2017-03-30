@@ -33,7 +33,11 @@ public class Interp implements Visitor
             else if(n.type instanceof IntArrayType || n.type instanceof BoolArrayType)
 	    {
 		if(n.type instanceof IntArrayType){
-			ArrayList<Integer> ints = new ArrayList<Integer>((((IntArrayType)n.type).end+1)-((IntArrayType)n.type).begin);
+//			System.out.println("Range: " + ((IntArrayType)n.type).begin + " to " + ((IntArrayType)n.type).end);
+			ArrayList<Integer> ints = new ArrayList<Integer>();
+			for(int p = 0; p < (Integer)((IntArrayType)n.type).end; p++)
+				ints.add(p, null);
+			System.out.println("Created an array of size " + ints.size());
 			symTable.put(n.name, new VarInfo(new IntArrayType(((IntArrayType)n.type).begin, ((IntArrayType)n.type).end), ints));
                 }else{
 			ArrayList<Boolean> bools = new ArrayList<Boolean>((((BoolArrayType)n.type).end+1)-((BoolArrayType)n.type).begin);
@@ -75,9 +79,9 @@ public class Interp implements Visitor
 	        if(n.dlist.dlist.get(x) instanceof Id)
 		    symTable.put(((Id) n.dlist.dlist.get(x)).name, temp[x]);
 		else{
-			System.out.println("Setting array with " + temp[x].value);
-		    ((ArrayList<Object>)symTable.get(((ArrayElt) n.dlist.dlist.get(x)).name).value).set(x, temp[x].value);
-		    
+			System.out.println("Setting array with " + temp[x].value + " to an array of size " + ((ArrayList<Object>)symTable.get(((ArrayElt) n.dlist.dlist.get(x)).name).value).size());
+//		    ((ArrayList<Object>)symTable.get(((ArrayElt) n.dlist.dlist.get(x)).name).value).set((Integer)((ArrayElt)n.elist.elist.get( )).index.accept(eval), temp[x].value);
+		    ((ArrayList<Object>)symTable.get(((ArrayElt) n.dlist.dlist.get(x)).name).value).set((Integer)(((ArrayElt)n.dlist.dlist.get(x)).index.accept(eval)), temp[x].value);
 	    }}
 	}
   	public void visit(If n){
