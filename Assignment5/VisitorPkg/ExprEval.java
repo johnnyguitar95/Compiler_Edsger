@@ -129,7 +129,13 @@ public class ExprEval implements ValueVisitor {
 		return v;
 	}
   	public Object visit(ArrayElt n){
-		Object v = ((ArrayList<Object>)symTable.get(n.name).value).get((Integer)n.index.accept(this));
+		int buffer;
+		if(symTable.get(n.name).type instanceof IntArrayType)
+			buffer = ((IntArrayType)symTable.get(n.name).type).begin;
+		else
+			buffer = ((BoolArrayType)symTable.get(n.name).type).begin;
+//		Object v = ((ArrayList<Object>)symTable.get(n.name).value).get((Integer)n.index.accept(this));
+		Object v = ((ArrayList<Object>)symTable.get(n.name).value).get((Integer)n.index.accept(this)-buffer);
 		if(v == null){
 			System.out.println("Uninitialized variable: " + n.name);
 			System.out.println("Closing Edsger");

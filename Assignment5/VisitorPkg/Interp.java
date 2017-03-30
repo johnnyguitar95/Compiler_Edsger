@@ -39,7 +39,7 @@ public class Interp implements Visitor
 			symTable.put(n.name, new VarInfo(new IntArrayType(((IntArrayType)n.type).begin, ((IntArrayType)n.type).end), ints));
                 }else{
 			ArrayList<Boolean> bools = new ArrayList<Boolean>();
-			for(int p = 0; p < (((IntArrayType)n.type).end+1)-((BoolArrayType)n.type).begin; p++)
+			for(int p = 0; p < (((BoolArrayType)n.type).end+1)-((BoolArrayType)n.type).begin; p++)
 				bools.add(p,null);
 			symTable.put(n.name, new VarInfo(new BoolArrayType(((BoolArrayType)n.type).begin, ((BoolArrayType)n.type).end), bools));
 		}
@@ -89,7 +89,7 @@ public class Interp implements Visitor
 			upper = ((BoolArrayType) ty).end;
 		    }
 		    if(ind >= lower && ind <= upper)
-		        ((ArrayList<Object>)symTable.get(((ArrayElt) n.dlist.dlist.get(x)).name).value).set(ind, temp[x].value);
+		        ((ArrayList<Object>)symTable.get(((ArrayElt) n.dlist.dlist.get(x)).name).value).set(ind-lower, temp[x].value);
 		    else
 		        System.out.println("INDEX OUT OF BOUND ERROR");
 	    	}
