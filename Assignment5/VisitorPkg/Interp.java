@@ -33,16 +33,18 @@ public class Interp implements Visitor
             else if(n.type instanceof IntArrayType || n.type instanceof BoolArrayType)
 	    {
 		if(n.type instanceof IntArrayType){
-			ArrayList<Integer> ints = new ArrayList<Integer>((((IntArrayType)n.type).end+1)-((IntArrayType)n.type).begin);
+			ArrayList<Integer> ints = new ArrayList<Integer>();
+			for(int p = 0; p < (((IntArrayType)n.type).end+1)-((IntArrayType)n.type).begin; p++)
+				ints.add(p, null);
 			symTable.put(n.name, new VarInfo(new IntArrayType(((IntArrayType)n.type).begin, ((IntArrayType)n.type).end), ints));
                 }else{
-			ArrayList<Boolean> bools = new ArrayList<Boolean>((((BoolArrayType)n.type).end+1)-((BoolArrayType)n.type).begin);
+			ArrayList<Boolean> bools = new ArrayList<Boolean>();
+			for(int p = 0; p < (((BoolArrayType)n.type).end+1)-((BoolArrayType)n.type).begin; p++)
+				bools.add(p,null);
 			symTable.put(n.name, new VarInfo(new BoolArrayType(((BoolArrayType)n.type).begin, ((BoolArrayType)n.type).end), bools));
 		}
 
-	    }
-	    //System.out.println("Added: " + n.name);
-	    
+	   }
 	}
 
 	//not necessary
@@ -75,10 +77,23 @@ public class Interp implements Visitor
 	        if(n.dlist.dlist.get(x) instanceof Id)
 		    symTable.put(((Id) n.dlist.dlist.get(x)).name, temp[x]);
 		else{
-			System.out.println("Setting array with " + temp[x].value);
-		    ((ArrayList<Object>)symTable.get(((ArrayElt) n.dlist.dlist.get(x)).name).value).set(x, temp[x].value);
-		    
-	    }}
+		    Integer ind = (Integer)((ArrayElt)n.dlist.dlist.get(x)).index.accept(eval);
+		    Type ty = symTable.get(((ArrayElt) n.dlist.dlist.get(x)).name).type;
+		    int lower, upper;//need these variabes for checking the array bounds
+		    //check if it's a bool array or int array - stupid java typecasting 
+		    if(ty instanceof IntArrayType){
+			lower = ((IntArrayType) ty).begin;
+			upper = ((IntArrayType) ty).end;
+		    }else{
+			lower = ((BoolArrayType) ty).begin;
+			upper = ((BoolArrayType) ty).end;
+		    }
+		    if(ind >= lower && ind <= upper)
+		        ((ArrayList<Object>)symTable.get(((ArrayElt) n.dlist.dlist.get(x)).name).value).set(ind-lower, temp[x].value);
+		    else
+		        System.out.println("INDEX OUT OF BOUND ERROR");
+	    	}
+	    }
 	}
   	public void visit(If n){
 	    for(int x = 0; x<n.glist.size(); x++){
